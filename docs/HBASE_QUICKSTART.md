@@ -1,15 +1,25 @@
 # TiDB on HBase
 
 
+0) simple installation of HBase, using cloudera cdh (with steps for ubuntu):
+
+1. http://www.cloudera.com/documentation/enterprise/latest/topics/cm_ig_path_b_manual.html#concept_p4z_qxt_25_unique_3__ol_jhv_kdd_d5_unique_2 (do the 1 click install to install the repositories,  richt click on links  of your dist, and wget download it, dpkg -i it :  wget https://archive.cloudera.com/cdh5/one-click-install/trusty/amd64/cdh5-repository_1.0_all.deb ; sudo dpkg -i cdh5-repository_1.0_all.deb
+)
+2. http://www.cloudera.com/documentation/enterprise/latest/topics/cdh_ig_hbase_install.html (sudo apt-get install hbase )
+3. http://www.cloudera.com/documentation/enterprise/latest/topics/cdh_ig_hbase_config.html (edit the files as written)
+2. http://www.cloudera.com/documentation/enterprise/latest/topics/cdh_ig_hbase_standalone_start.html (sudo apt-get install hbase-master)
+
 **TiDB only supports HBase >= 0.98.5**
 
 1) Build && Install pingcap/themis coprocessor to HBase:
 
 1. git clone https://github.com/pingcap/themis.git
 2. cd themis && mvn clean package -DskipTests
-4. cp themis-coprocessor/target/themis-coprocessor-1.0-SNAPSHOT-jar-with-dependencies.jar $HBASE_ROOT/lib
+4. cp themis-coprocessor/target/themis-coprocessor-1.0-SNAPSHOT-jar-with-dependencies.jar /usr/lib/hbase/lib/  ( copy jar to $HBASE_ROOT/lib )
 5. Add configurations for themis coprocessor in hbase-site.xml:
 
+3)
+1. service hbase-master start
 ```
 <property>
     <name>hbase.coprocessor.user.region.classes</name>
