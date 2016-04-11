@@ -193,12 +193,16 @@ func (f *flagSetter) aggregateFunc(x *AggregateFuncExpr) {
 	x.SetFlag(flag)
 }
 
-// SetBinaryOperationExprFlag sets flag to binary operation expression generated manually.
-func SetBinaryOperationExprFlag(result, l, r ExprNode) {
-	result.SetFlag((l.GetFlag() | r.GetFlag()) &^ FlagPreEvaluated)
-}
-
-// SetColumnNameExprFlag sets flag to column name expression generated manually.
-func SetColumnNameExprFlag(result, c ExprNode) {
-	result.SetFlag((c.GetFlag() | FlagHasReference) &^ FlagPreEvaluated)
+// MergeChildrenFlags sets flag to parent(args[0]) by children(args[1:])
+func MergeChildrenFlags(args ...ExprNode) {
+	if len(args) < 2 {
+		return
+	}
+	parent := args[0]
+	children := args[1:]
+	var flag uint64
+	for _, child := range children {
+		flag |= child.GetFlag()
+	}
+	parent.SetFlag(flag &^ FlagPreEvaluated)
 }
